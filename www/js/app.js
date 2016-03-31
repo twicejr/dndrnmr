@@ -6,10 +6,10 @@ var app =
     ready: false,
     lang: 'nl',
     state_online: null,
-    remote: 'http://appserver.wsvnb.nl/api/json/',
+    remote: 'http://192.168.11.20/ws/appserver/api/json/',
     api_page: 'pages',
     api_pagesum: 'pagesum',
-    folder: 'wsnvbapp',
+    folder: 'dndrnmr',
     cacheFile: 'pages.json',
     initialize: function()
     {
