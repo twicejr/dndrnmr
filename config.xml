@@ -106,6 +106,9 @@
     <preference name="StatusBarOverlaysWebView" value="false" />
     <preference name="StatusBarStyle" value="darkcontent" />
     
+    <!-- Important for cdm...-->
+    <preference name="android-build-tool" value="gradle" /> 
+    
     
     <feature name="StatusBar">
         <param name="ios-package" onload="true" value="CDVStatusBar" />
