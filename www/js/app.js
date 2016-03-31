@@ -1,5 +1,7 @@
 var app =
 {
+    push_sender_id: "1090287892944",
+    
     refresh_interval: 0, //Milliseconds. 0 = disable
     nav_count: 0,
     done: false,
@@ -40,7 +42,6 @@ var app =
     bindEvents: function()
     {
         document.addEventListener("backbutton", app.backButton);
-
         document.addEventListener('deviceready', app.initialized, false);
         document.addEventListener('online', app.onOnline, false);
         document.addEventListener('offline', app.onOffline, false);
@@ -54,44 +55,36 @@ var app =
             {
                 app.whenReady();
             }, app.refresh_interval);
-        }
+        }     
     },
     initialized: function()
     {
-        //Status bar fix for Apple with plugin...
-        StatusBar.overlaysWebView(false);
-        
+        StatusBar.overlaysWebView(false);//Status bar fix for Apple with plugin...
+        app.detectLanguage();
         app.ready = true;
-        
-        $('body').on('click', 'a.external', function() //@todo: detect the external links automatically...
-        {
-            var url = $(this).attr('href');
-            if(device.platform === 'Android')
-            {
-                console.log('External link opened');
-                navigator.app.loadUrl(url, {openExternal:true});
-            }
-            else 
-            {
-                console.log('External link opened on iphone');
-                window.open(url, '_system',  'location=yes');
-            }
-            return false;
-        });
-        
-        navigator.globalization.getLocaleName
-        (
-            function (locale) 
-            {
-                //Add the language when it is available.
-                app.lang = locale.value == 'nl-NL' ? 'nl' : 'en'; //@todo: find a good solution.
-                
-                app.api_page += '?b64i=1&lang=' + app.lang;
-                app.api_pagesum += '?b64i=1&lang=' + app.lang;
-            },
-            function () {console.log('Language could not be detected!');}
-        );
+        app.handleExternalLinks();
         app.whenReady();
+    },
+    whenReady: function()
+    {
+        if(app.ready)
+        {
+            if(!app.done)
+            {
+                //Check for contents after the filesystem is ready.
+                fs.prepare(app.checkData);
+            }
+            else
+            {
+                //Just check for contents (again)
+                app.checkData();
+            }
+        }
+    },
+    onDone: function() //realy ready for everything.
+    {
+        app.done = true; //Done :)
+        push.register(app.push_sender_id); //including push
     },
     onOffline: function()
     {
@@ -121,21 +114,43 @@ var app =
     {
         console.log('We went offline.');
     },
-    whenReady: function()
+    handleExternalLinks: function()
     {
-        if(app.ready)
+        $('body').on('click', 'a.external', function() //@todo: detect the external links automatically...
         {
-            if(!app.done)
+            var url = $(this).attr('href');
+            if(device.platform === 'Android')
             {
-                //Check for contents after the filesystem is ready.
-                fs.prepare(app.checkData);
+                console.log('External link opened');
+                navigator.app.loadUrl(url, {openExternal:true});
             }
-            else
+            else 
             {
-                //Just check for contents (again)
-                app.checkData();
+                console.log('External link opened on iphone');
+                window.open(url, '_system',  'location=yes');
             }
-        }
+            return false;
+        });
+    },
+    detectLanguage: function()
+    {
+        //Get lang
+        navigator.globalization.getLocaleName
+        (
+            function (locale) 
+            {
+                //Add the language when it is available.
+                app.lang = locale.value == 'nl-NL' ? 'nl' : 'en'; //@todo: find a good solution.
+                
+                app.api_page += '?b64i=1&lang=' + app.lang;
+                app.api_pagesum += '?b64i=1&lang=' + app.lang;
+            },
+            function () 
+            {
+                console.log('Language could not be detected!'); 
+                app.lang = 'nl';
+            }
+        );
     },
     checkData: function()
     {
@@ -231,7 +246,7 @@ var app =
             backbone.specialism(dataset.specialdata);
         }
         
-        app.done = true; //Done :)
+        app.onDone();
         $(document).trigger('appready');
     },
     setCss: function(css)
@@ -331,6 +346,11 @@ var app =
     },
     showPopup: function(content)
     {
+        if(!app.done)
+        {
+            console.log('Wanted to show popup but was not ready: ' + content);
+            return;
+        }
         $('#popup').remove(); //Remove any old popups
         var popupElem = $('<div data-role="popup" id="popup" data-transition="flip">' + content + '</div>');
         popupElem.appendTo('body');
