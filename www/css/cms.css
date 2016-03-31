@@ -2,7 +2,7 @@
 .CmsAppBlockMessages .message + .message
 {
     margin-top: 15px;
-    border-top: 2px solid #4472b7;
+    border-top: 2px solid green;
 }
 
 .CmsAppBlockMessages .message + .message

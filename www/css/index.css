@@ -72,7 +72,7 @@ h2
 }
 
 .event.received {
-    background-color:#4B946A;
+    background-color: green;
     display:none;
 }
 
@@ -136,7 +136,7 @@ header
 
 footer
 {
-    background: #195297;
+    background: green;
 }
 footer a
 {
@@ -146,7 +146,7 @@ footer a
 
 footer li
 {
-    background: #195297;
+    background: green;
 }
 
 footer li.has-new-content
