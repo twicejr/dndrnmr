@@ -3,7 +3,7 @@ var push =
     PushNotification: null,
     register: function(push_sender_id)
     {
-        push.PushNotification = PushNotification.init({
+        var gcm = PushNotification.init({
             android: {
                 senderID: push_sender_id
             },
@@ -15,17 +15,20 @@ var push =
             windows: {}
         });
         
-        push.PushNotification.on('registration', push.registered);
-        push.PushNotification.on('notification', push.notification);
-        push.PushNotification.on('error',  push.error);
+        gcm.on('registration', push.registered);
+        gcm.on('notification', push.notification);
+        gcm.on('error',  push.error);
     },
     registered: function(data)
     {
         // data.registrationId
         console.log(data);
+        alert(data.registrationId);
+        return true;
     },
     notification: function(data)
     {
+        app.showPopup(data.title);
         console.log(data);
         // data.message,
         // data.title,
