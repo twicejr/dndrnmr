@@ -9,7 +9,9 @@ var push =
         try {
         alert(2);
     
-            var gcm = PushNotification.init({
+                    setTimeout(function()
+                    {
+                           var gcm = window.PushNotification.init({
                 android: {
                     senderID: push_sender_id
                 },
@@ -20,6 +22,8 @@ var push =
                 },
                 windows: {}
             });
+                    }, 5);
+         
         alert(3);
     
 
