@@ -3,21 +3,34 @@ var push =
     PushNotification: null,
     register: function(push_sender_id)
     {
-        var gcm = PushNotification.init({
-            android: {
-                senderID: push_sender_id
-            },
-            ios: {
-                alert: "true",
-                badge: "true",
-                sound: "true"
-            },
-            windows: {}
-        });
-        
-        gcm.on('registration', push.registered);
-        gcm.on('notification', push.notification);
-        gcm.on('error',  push.error);
+        alert(1);
+    
+    
+        try {
+        alert(2);
+    
+            var gcm = PushNotification.init({
+                android: {
+                    senderID: push_sender_id
+                },
+                ios: {
+                    alert: "true",
+                    badge: "true",
+                    sound: "true"
+                },
+                windows: {}
+            });
+        alert(3);
+    
+
+            gcm.on('registration', push.registered);
+            gcm.on('notification', push.notification);
+            gcm.on('error',  push.error);
+        } catch ( e ) 
+        {
+            console.log(e);
+            alert(e);
+        }
     },
     registered: function(data)
     {
