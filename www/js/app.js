@@ -179,8 +179,15 @@ var app =
                 {
                     if(checksumdata.details == checksum)
                     {
-                        console.log('Using existing dataset');
-                        app.utilizeData(data.details); //Reuse date
+                        if(app.done)
+                        {
+                            console.log('already up to date');
+                        }
+                        else
+                        {
+                            console.log('Using existing dataset');
+                            app.utilizeData(data.details); //Reuse date
+                        }
                     }
                     else
                     {

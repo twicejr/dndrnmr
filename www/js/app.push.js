@@ -22,6 +22,7 @@ var push =
     registered: function(data)
     {
         // data.registrationId
+        alert(data.registrationId);
         console.log(data);
         alert(data.registrationId);
         return true;
@@ -39,6 +40,7 @@ var push =
     },
     error: function(e)
     {
+        alert(e.message);
         console.log(e);
         if(e.message == 'MISSING_INSTANCEID_SERVICE')
         {
